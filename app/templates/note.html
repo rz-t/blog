@@ -1,0 +1,182 @@
+{% extends "layout.html" %}
+
+{% block active_note %}
+class="active"
+{% endblock %}
+
+{% block content %}
+<div class="layui-row">
+    <div class="layui-col-xs8 layui-col-md5 layui-col-md-offset1" style="margin-bottom:15px; margin-top:8px;">
+        <span class="layui-breadcrumb" style="margin-left:10%;">
+            <a href="{{ url_for('web.note') }}">NOTE</a>
+            {% for node in parent_list %}
+            <a href="{{ url_for('web.note') }}{{ node.id }}">{{ node.title }}</a>
+            {% endfor %}
+            <a>
+                <cite>{{ node_model.title }}</cite>
+            </a>
+        </span>
+    </div>
+    {% if session['roles'] | check_roles %}
+    <div class="layui-col-md2 layui-col-md-offset4 layui-col-xs2 layui-col-xs-offset2 layui-col-sm1 layui-col-sm-offset3">
+        {% if session['note_cut_id'] %}{# 如果有剪切，则显示粘贴 #}
+        <i class="fa fa-files-o" onclick="cut_note('{{ url_for('web.note_paste', _id=node_model.id) }}')" style="font-size:20px; cursor:pointer; margin-top:5px; margin-left:-18%; margin-right:10px;" title="粘贴"></i>
+        {% endif %}
+        <i class="layui-icon layui-icon-add-1" onclick="add_note('{{ node_model.id }}')" style="font-size:26px; cursor:pointer;" title="添加"></i>
+    </div>
+    {% endif %}
+</div>
+<div class="layui-col-md8 layui-col-md-offset2" style="padding: 20px; margin-bottom:20px; background-color: #F2F2F2;">
+	<div class="layui-row layui-col-space20">
+        {% if node_list | count == 0 %}
+        <span>
+            空空如也～
+        </span>
+        {% endif %}
+        {% for node in node_list %}
+		<div>
+			<div class="layui-card">
+				<div class="layui-card-header">
+                    <a href="{{ url_for('web.note') }}{{ node.id }}">{{ node.title }}</a>
+                    {% if session['roles'] | check_roles %}
+                    <i class="layui-icon layui-icon-delete" onclick="delete_note('{{ url_for('web.note_delete', _id=node.id) }}')" style="font-size:18px; cursor:pointer; margin-left:5px; float:right;" title="删除"></i>
+                    {% if session['note_cut_id'] %}{# 如果有剪切，则显示粘贴 #}
+                        <i class="fa fa-files-o" onclick="cut_note('{{ url_for('web.note_paste', _id=node.id) }}')" style="font-size:15px; margin-top:13px; margin-left:5px; cursor:pointer; float:right;" title="粘贴"></i>
+                    {% endif %}
+                    {% if not session['note_cut_id'] %}{# 如果没有已剪切的，则显示剪切 #}
+                        <i class="fa fa-scissors" onclick="cut_note('{{ url_for('web.note_cut', _id=node.id) }}')" style="font-size:15px; margin-top:13px; margin-left:5px; cursor:pointer; float:right;" title="剪切"></i>
+                    {% endif %}
+                    <i class="layui-icon layui-icon-edit" onclick="edit_note(this, '{{ node.title }}', '{{ node.id }}')" style="font-size:18px; cursor:pointer; float:right;" title="修改"></i>
+                    {% endif %}
+                </div>
+				<div class="layui-card-body" style="padding-left:35px;">
+                    {{ node | gen_intro('note') | safe }}
+                </div>
+                <div class="layui-card-footer" style="text-align:right;">
+                    <span style="margin-right:18px;">{{ node.create_time | format_time }}</span>
+                </div>
+			</div>
+        </div>
+        {% endfor %}
+	</div>
+</div>
+{% endblock %}
+{% block end %}
+    {% if session['note_cut_id'] %}{# 粘贴 #}
+        <script>
+            $(function(){
+                document.onkeydown = ()=>{
+                    if(event.keyCode == 27){
+                        $.post("{{ url_for('web.note_cancel_cut') }}", {}, (resp)=>{
+                            r = JSON.parse(resp);
+                            if (r.flag != 'success'){
+                                layer.msg(r.data, {icon: 5}); 
+                            }else{
+                                window.location.reload();
+                            }
+                        });
+                        return false;
+                    }
+                }
+            })
+        </script>
+    {% endif %}
+    {% if session['roles'] | check_roles %}
+    <script>
+        function cut_note(url){
+            //剪切粘贴
+            $.post(url, {}, (resp)=>{
+                r = JSON.parse(resp);
+                if (r.flag != 'success'){
+                    layer.msg(r.data, {icon: 5}); 
+                }else{
+                    window.location.reload();
+                }
+            });
+        }
+        function delete_note(url){
+            layer.confirm('确定删除？', {icon:3, title:'提示'}, (index)=>{
+                $.post(url, {}, (resp)=>{
+                    r = JSON.parse(resp);
+                    if (r.flag != 'success'){
+                        layer.msg(r.data, {icon: 5}); 
+                    }else{
+                        layer.msg('删除成功！', {icon: 6});
+                        window.location.reload();
+                    }
+                });
+                layer.close(index);
+            });
+        }
+        function add_note_func(_id, flag){
+            return ()=>{
+                $.post("{{ url_for('web.note_add') }}" + (_id ? _id : ''),{
+                    title: $("#title").val(),
+                    flag: flag
+                }, (resp)=>{
+                    r = JSON.parse(resp);
+                    if (r.flag != 'success'){
+                        layer.tips(r.data, '#add_form');
+                    }else{
+                        window.location.reload();
+                    }
+                });
+                return false;
+            }
+        }
+
+        function add_note(_id){
+            layer.open({
+                tipsMore:true,
+                title: '添加节点',
+                btn: ['文件', '文件夹'],
+                shadeClose: true,
+                area:'350px',
+                yes: add_note_func(_id, 0),
+                btn2: add_note_func(_id, 1),
+                content: '\
+                    <form class="layui-form" id="add_form" action="javascript:;" method="post" lay-filter="add_form">\
+                        <div class="layui-form-item">\
+                            <div class="layui-input-inline" style="width:100%; margin:0px 10px 0px 0px;">\
+                                <input id="title" name="title" required lay-verify="required" placeholder="请输入节点名称" autocomplete="off" class="layui-input">\
+                            </div>\
+                        </div>\
+                        <input type="submit" id="submit_btn" style="display:none;">\
+                    </form>\
+                    '
+            })
+        }
+
+        function edit_note(self, old_title, _id){
+            layer.open({
+                tipsMore:true,
+                title: old_title,
+                shadeClose: true,
+                area:'350px',
+                yes: ()=>{
+                    $.post("{{ url_for('web.note_edit_title') }}" + _id, $("#edit_form").serialize(), (resp)=>{
+                        r = JSON.parse(resp);
+                        if (r.flag != 'success'){
+                            layer.tips(r.data, '#edit_form');
+                            return false;
+                        }else{
+                            $(self).prev().text(r.data);
+                            layer.closeAll();
+                        }
+                    })
+                },
+                content: '\
+                    <form class="layui-form" id="edit_form" action="javascript:;" method="post" lay-filter="edit_form">\
+                        <div class="layui-form-item">\
+                            <div class="layui-input-inline" style="width:100%; margin:0px 10px 0px 0px;">\
+                                <input id="new_title" name="new_title" required lay-verify="required" placeholder="请输入新的名称" autocomplete="off" class="layui-input">\
+                            </div>\
+                        </div>\
+                        <input type="submit" id="submit_btn" style="display:none;">\
+                    </form>\
+                    '
+            })
+        }
+    </script>
+    {% endif %}
+{% endblock %}

@@ -1,0 +1,64 @@
+{% extends "layout.html" %}
+
+{% block active_note %}
+class="active"
+{% endblock %}
+
+{% block resource %}
+    <!-- <link rel="stylesheet" href="{{ url_for('static', filename='css/markdown.css') }}"> -->
+        <link rel="stylesheet" href="{{ url_for('static', filename='markdown/css/style.css') }}" />
+        <link rel="stylesheet" href="{{ url_for('static', filename='markdown/css/editormd.css') }}" />
+{% endblock %}
+
+{% block content %}
+<div class="layui-container">
+    <div class="layui-row">
+        <div class="layui-col-xs8 layui-col-md5 layui-col-md-offset1" style="margin-bottom:10px; margin-top:8px;">
+            <span class="layui-breadcrumb" style="margin-left:5%;">
+                <a href="{{ url_for('web.note') }}">NOTE</a>
+                {% for node in parent_list %}
+                <a href="{{ url_for('web.note') }}{{ node.id }}">{{ node.title }}</a>
+                {% endfor %}
+                <a>
+                    <cite>{{ node_model.title }}</cite>
+                </a>
+            </span>
+        </div>
+        {% if session['roles'] | check_roles %}
+        <div class="layui-col-md1 layui-col-md-offset5 layui-col-xs1 layui-col-xs-offset3 layui-col-sm1 layui-col-sm-offset3">
+            <i class="layui-icon layui-icon-edit" onclick="edit_note()" style="font-size:30px; cursor:pointer;" title="修改"></i>
+        </div>
+        {% endif %}
+    </div>
+    <div class="layui-row">
+        <div id="editormd-view" class="layui-col-md10 layui-col-md-offset1" style="min-height:600px; padding:20px; margin-top:10px; border:groove;">
+            <textarea id="append-view" style="display:none">{{ content }}</textarea>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block end %}
+<script src="{{ url_for('static', filename='markdown/lib/marked.min.js') }}"></script>
+<script src="{{ url_for('static', filename='markdown/lib/prettify.min.js') }}"></script>
+<script src="{{ url_for('static', filename='markdown/lib/raphael.min.js') }}"></script>
+<script src="{{ url_for('static', filename='markdown/lib/underscore.min.js') }}"></script>
+<script src="{{ url_for('static', filename='markdown/lib/sequence-diagram.min.js') }}"></script>
+<script src="{{ url_for('static', filename='markdown/lib/flowchart.min.js') }}"></script>
+<script src="{{ url_for('static', filename='markdown/lib/jquery.flowchart.min.js') }}"></script>
+<script src="{{ url_for('static', filename='markdown/js/editormd.js') }}"></script>
+<script>
+    $(function(){
+        editormdView = editormd.markdownToHTML("editormd-view", {
+                    emoji           : true,
+                    taskList        : true,
+                    tex             : true,  // 默认不解析
+                    flowChart       : true,  // 默认不解析
+                    sequenceDiagram : true,  // 默认不解析
+                });
+    });
+    function edit_note(){
+        location.href="{{ url_for('web.note_editor', _id=node_model.id) }}";
+    }
+</script>
+{% endblock %}

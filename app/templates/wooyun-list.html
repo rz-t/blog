@@ -1,0 +1,82 @@
+{% extends "layout.html" %}
+
+{% block active_wooyun %}
+class="active"
+{% endblock %}
+
+{% block header %}
+		<form class="layui-form layui-col-md12 x-so" id="wooyun_form" method="POST" style="margin-top: 4%">
+			<input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+			<div class="layui-row" style="margin-bottom:8px;">
+				<div class="layui-input-inline layui-col-sm6 layui-col-sm-offset3 layui-col-xs8 layui-col-xs-offset1">
+					<input type="text" id="keyword" name="keyword" class="layui-input" value="{{ keyword }}" placeholder="title:xx   author:xx">
+				</div>
+				<div class="layui-input-inline layui-col-sm1 layui-col-xs1">
+					<button class="layui-btn layui-btn-primary" lay-submit lay-filter="search-btn">检索</button>
+				</div>
+			</div>
+		</form>
+        <table class="layui-table" lay-even style="width:80%; margin-left:10%">
+            <thead>
+				<tr>
+					<th style="text-align:center">标题</th>
+					<th style="text-align:center">作者</th>
+				</tr>
+            </thead>
+            <tbody>
+            {% for drop in drop_list %}
+                <tr>
+                    <td><a href="{{ uri }}/drops/{{drop.path | urlencode}}" target="_blank">{{ drop.title }}</a></td>
+                    <td><a href="javascript:search(0, 'author:{{ drop.author }}');">{{ drop.author }}</a></td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        <div class="page">
+            <span>
+				{% if start > 1 %}
+					<a class="prev" href="javascript:search({{ start - 1 }});">&lt;&lt;</a>
+					{% if start > 2 %}
+					<a class="num" href="javascript:search(1)">1</a>
+					...
+					{% endif %}
+                    <a class="num" href="javascript:search({{ start -1 }});">{{ start - 1 }}</a>
+                {% endif %}
+                <span class="current">{{ start }}</span>
+                {% if start < max_page %}
+					<a class="num" href="javascript:search({{ start + 1 }});">{{ start + 1 }}</a>
+					{% if start < max_page - 1 %}
+						...
+                        <a class="num" href="javascript:search({{ max_page }});">{{ max_page }}</a>
+                    {% endif %}
+                    <a class="next" href="javascript:search({{ start + 1 }});">&gt;&gt;</a>
+                {% endif %}
+			</span>
+			<span class="layui-laypage-count" style="margin-left:20px;">共 {{ count }} 条</span>
+        </div>
+
+{% endblock %}
+
+{% block end %}
+<script>
+	layui.use('form', function(){
+		var form = layui.form;
+		
+		//监听提交
+		form.on('submit(formDemo)', function(data){
+		layer.msg(JSON.stringify(data.field));
+		return false;
+		});
+	});
+
+	function search(start=-1, keyword=null){
+		if(start > 0){
+			$("#wooyun_form").append('<input type="hidden" name="start" value="' + start + '" >')
+		}
+		if(keyword){
+			$("#keyword").val(keyword)
+		}
+		$("#wooyun_form").submit();
+	}
+</script>
+{% endblock %}

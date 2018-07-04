@@ -1,0 +1,34 @@
+{% extends "markdown.html" %}
+
+{% block title %}
+{{ node_model.title }}
+{% endblock %}
+
+{% block header %}
+<h2 style="cursor:pointer" onclick="view_note()">{{ node_model.title }}</h2>
+{% endblock %}
+
+{% block content %}
+{{ content }}
+{% endblock %}
+
+{% block end %}
+<script>
+    function save_md(){
+        //$("#content-editormd textarea").val()
+        //{{ node_model.id }}
+        $.post("{{ url_for('web.note_edit_content', _id=node_model.id) }}", {
+            content: $("#content-editormd textarea").val()
+        }, function(resp){
+            resp = JSON.parse(resp);
+            if(resp.flag != 'success'){
+                alert(JSON.stringify(resp));
+            }
+        })
+    }
+
+    function view_note(_id){
+        location.href = "{{ url_for('web.note', _id=node_model._id) }}";
+    }
+</script>
+{% endblock %}

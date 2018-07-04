@@ -1,0 +1,39 @@
+{% extends "layout.html" %}
+
+{% block active_wooyun %}
+class="active"
+{% endblock %}
+
+{% block header %}
+		<div class="logo">
+			<hr class="line-1">
+			<a href="javascript:$('#wooyun_form').submit()">wooyun drops</a>
+			<!--<span>Lorem ipsum dolor sit amet</span>-->
+			<hr class="line-1">
+		</div>
+		<form class="layui-form layui-col-md12 x-so" id="wooyun_form" method="POST" style="margin-top: 4%">
+			<input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+			<div class="layui-row">
+				<div class="layui-input-inline layui-col-sm6 layui-col-sm-offset3 layui-col-xs8 layui-col-xs-offset1">
+						<input type="text" name="keyword" class="layui-input" placeholder="title:xx   author:xx">
+				</div>
+				<div class="layui-input-inline layui-col-sm1 layui-col-xs1">
+					<button class="layui-btn layui-btn-primary" lay-submit lay-filter="search_btn">检索</button>
+				</div>
+			</div>
+		</form>
+{% endblock %}
+
+{% block end %}
+<script>
+	layui.use('form', function(){
+		var form = layui.form;
+		
+		//监听提交
+		form.on('submit(formDemo)', function(data){
+		layer.msg(JSON.stringify(data.field));
+		return false;
+		});
+	});
+</script>
+{% endblock %}

@@ -1,0 +1,56 @@
+{% extends "layout.html" %}
+
+{% block active_home %}
+class="active"
+{% endblock %}
+
+{% block header %}
+<div class="layui-col-md8 layui-col-md-offset2" style="margin-top:5%;">
+	<div id="owl-slide" class="owl-carousel">
+		<div class="item">
+			<img src="{{ url_for('static', filename='images/slider1.jpg') }}" />
+		</div>
+		<div class="item">
+			<img src="{{ url_for('static', filename='images/slider2.jpg') }}" />
+		</div>
+		<div class="item">
+			<img src="{{ url_for('static', filename='images/slider3.jpg') }}" />
+
+		</div>
+	</div>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="layui-col-md8 layui-col-md-offset2" style="padding: 20px; background-color: #F2F2F2;">
+	<div class="layui-row layui-col-space20">
+		<div>
+			<div class="layui-card">
+				<div class="layui-card-header">卡片面板<span style="float:right; padding-right:10px;">2018-06-18</span></div>
+				<div class="layui-card-body">
+					卡片式面板面板通常用于非白色背景色的主体内
+					<br> 从而映衬出边框投影
+				</div>
+			</div>
+		</div>
+		<div>
+			<div class="layui-card">
+				<div class="layui-card-header">卡片面板<span style="float:right; padding-right:10px;">2018-06-18</span></div>
+				<div class="layui-card-body">
+					结合 layui 的栅格系统
+					<br> 轻松实现响应式布局
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock %}
+{% block end%}
+<footer>
+	<div class="zerogrid wrap-footer">
+		<div class="copyright">
+			Copyright © rz6.tech.  All rights reserved.
+		</div>
+		</div>
+</footer>
+{% endblock %}

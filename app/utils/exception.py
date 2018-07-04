@@ -1,0 +1,2 @@
+class SecException(RuntimeError):
+    pass
