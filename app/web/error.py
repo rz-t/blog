@@ -12,9 +12,9 @@ def sec_exception(e):
     """
     try:
         addr = request.remote_addr
-        logger.error("{}: {}: {}".format(session.get('username'), addr, e))
+        logger.error("{}: {}:".format(session.get('username'), addr), exc_info=1)
     except Exception as ec:
-        logger.error(ec)
+        logger.exception(ec)
     return Resp(Resp.ERROR, str(e)).to_json()
 
 
@@ -25,8 +25,8 @@ def exception(e):
     """
     try:
         addr = request.remote_addr
-        logger.error("{}: {}: {}".format(session.get('username'), addr, e))
+        logger.error("{}: {}:".format(session.get('username'), addr), exc_info=1)
     except Exception as ec:
-        logger.error(ec)
+        logger.exception(ec)
 
     return Resp(Resp.ERROR, str(e)).to_json()

@@ -23,7 +23,12 @@ def before():
 
 @web.route("/favicon.ico")
 def favicon():
-    return Resp(Resp.ERROR).to_json()
+    from app import app_path
+    resp = make_response()
+    resp.headers['Content-Type'] = 'image/git'
+    with open("{}/favicon.ico".format(app_path), 'rb') as f:
+        resp.set_data(f.read())
+    return resp
 
 @web.route("/")
 @web.route("/home")
@@ -32,7 +37,10 @@ def home():
     """
     首页
     """
-    pass
+    note_lib = NodeLib('note')
+    return {
+        'node_list': note_lib.find_nodes()
+    }
 
 @web.route("/vcode")
 def vcode():

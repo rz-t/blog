@@ -65,11 +65,10 @@
 						<span>Home</span>
 					</a>
 				</li>
-				<li {% block active_blog %}{% endblock %} class=' has-sub'>
-					<a href='#'>
+				<li {% block active_blog %}{% endblock %}>
+					<a href='https://blog.rz6.tech'>
 						<span>Blog</span>
 					</a>
-					{{ g.blog_tree | traverse_tree('blog') | safe }}
 				</li>
 				<li {% block active_note %}{% endblock %} class='has-sub'>
 					<a href='{{ url_for('web.note') }}'>
@@ -164,6 +163,10 @@
 						window.location.reload();
 					}
 				});
+			}
+
+			function url(u){
+				window.location.href = u;
 			}
 
 			$(document).ready(function () {

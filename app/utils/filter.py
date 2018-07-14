@@ -71,7 +71,7 @@ def gen_intro(node, table):
             node_list = node_lib.find_child_node(node.id)
             results = []
             for _ in node_list:
-                results.append('<a href="/{}/{}">{}</a>'.format(table, _.id, _.title))
+                results.append('<a href="/{}/{}" style="margin-right:13px;">{}</a>'.format(table, _.id, _.title))
             return ' '.join(results)
         else:   # 是文件则读取文件内容
             path = node_lib.final_path(node)

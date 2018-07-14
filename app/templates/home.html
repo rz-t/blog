@@ -5,17 +5,16 @@ class="active"
 {% endblock %}
 
 {% block header %}
-<div class="layui-col-md8 layui-col-md-offset2" style="margin-top:5%;">
+<div class="layui-col-md8 layui-col-md-offset2" style="margin-top:4%;">
 	<div id="owl-slide" class="owl-carousel">
-		<div class="item">
-			<img src="{{ url_for('static', filename='images/slider1.jpg') }}" />
+		<div class="item" onclick="url('http://blog.rz6.tech')">
+			<img style="height:385px;width: 911px; cursor:pointer;" title="blog" src="{{ url_for('static', filename='images/slider-blog.jpg') }}" />
 		</div>
-		<div class="item">
-			<img src="{{ url_for('static', filename='images/slider2.jpg') }}" />
+		<div class="item" onclick="url('{{ url_for('web.note') }}')">
+			<img style="height:385px;width: 911px; cursor:pointer;" title="note" src="{{ url_for('static', filename='images/slider-note.jpg') }}" />
 		</div>
-		<div class="item">
-			<img src="{{ url_for('static', filename='images/slider3.jpg') }}" />
-
+		<div class="item" onclick="url('{{ url_for('web.wooyun') }}')">
+			<img style="height:385px;width: 911px; cursor:pointer;" title="wooyun" src="{{ url_for('static', filename='images/slider-wooyun.jpg') }}" />
 		</div>
 	</div>
 </div>
@@ -24,24 +23,17 @@ class="active"
 {% block content %}
 <div class="layui-col-md8 layui-col-md-offset2" style="padding: 20px; background-color: #F2F2F2;">
 	<div class="layui-row layui-col-space20">
-		<div>
+		{% for node in node_list %}
 			<div class="layui-card">
-				<div class="layui-card-header">卡片面板<span style="float:right; padding-right:10px;">2018-06-18</span></div>
+				<div class="layui-card-header">
+					<a href="{{ url_for('web.note') }}{{ node.id }}">{{ node.title }}</a>
+					<span style="float:right; padding-right:10px;">{{ node.create_time | format_time }}</span>
+				</div>
 				<div class="layui-card-body">
-					卡片式面板面板通常用于非白色背景色的主体内
-					<br> 从而映衬出边框投影
+					{{ node | gen_intro('note') }}
 				</div>
 			</div>
-		</div>
-		<div>
-			<div class="layui-card">
-				<div class="layui-card-header">卡片面板<span style="float:right; padding-right:10px;">2018-06-18</span></div>
-				<div class="layui-card-body">
-					结合 layui 的栅格系统
-					<br> 轻松实现响应式布局
-				</div>
-			</div>
-		</div>
+		{% endfor %}
 	</div>
 </div>
 {% endblock %}

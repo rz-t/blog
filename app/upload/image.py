@@ -33,7 +33,6 @@ def upload_img():
     })
 
 @upload.route("/images/<name>")
-@check_roles(Role.admin)
 def download_img(name):
     logger.info("{} download img {}".format(session.get('username'), name))
     from app import app_path
