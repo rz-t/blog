@@ -15,7 +15,7 @@ def gen_vcode():
     image = Image.new('RGB', (width, height), 'white')
 
     # 设置字体
-    font = ImageFont.truetype('FreeSans', 40)
+    font = ImageFont.truetype('cmr10.ttf', 40)
     # 创建draw对象
     draw = ImageDraw.Draw(image)
     text = ''

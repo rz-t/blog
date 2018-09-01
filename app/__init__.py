@@ -4,7 +4,7 @@ from flask_wtf.csrf import CSRFProtect
 from app.web import web
 from app.upload import upload
 from app.utils.filter import traverse_tree, format_time, gen_intro, check_roles
-from app.conf.flask import DevConfig
+from app.conf.flask import DevConfig, ProdConfig
 from flaskext.markdown import Markdown
 
 app_path = os.path.dirname(os.path.realpath(__file__))
@@ -14,7 +14,7 @@ csrf = CSRFProtect()
 def create_app():
     app = Flask(__name__)
     app.secret_key = os.urandom(24)
-    app.config.from_object(DevConfig)
+    app.config.from_object(ProdConfig)
 
     app.register_blueprint(web)
     app.register_blueprint(upload)

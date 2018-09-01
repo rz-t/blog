@@ -7,7 +7,7 @@ from flask import request, session, render_template
 
 limit = 15  # 每页的数量
 
-@web.route("/wooyun", methods=['POST', 'GET'])
+@web.route("/wy", methods=['POST', 'GET'])
 def wooyun():
     """
     乌云drop

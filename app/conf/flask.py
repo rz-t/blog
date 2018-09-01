@@ -9,4 +9,4 @@ class DevConfig(Config):
 
 class Misc(object):
     host = '0.0.0.0'
-    port = '8899'
+    port = '7788'
