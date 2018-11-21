@@ -1,5 +1,6 @@
 # project
 app/file/
+app/conf/db.py
 .vscode/
 db.mongo
 
