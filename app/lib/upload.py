@@ -23,7 +23,7 @@ def file_save(_file, _suffix, _path):
         raise SecException('文件名有误！{}'.format(filename))
     suf = _[1]
 
-    if suf not in _suffix:
+    if suf.lower() not in _suffix:
         raise SecException('文件后缀有误！{}'.format(filename))
     
     name = '{}_{}'.format(time.ctime().replace(' ', '-'), random.randrange(100000, 1000000))
