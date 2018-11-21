@@ -8,5 +8,5 @@ class DevConfig(Config):
     DEBUG = True
 
 class Misc(object):
-    host = '0.0.0.0'
+    host = '127.0.0.1'
     port = '7788'
