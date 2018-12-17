@@ -1,0 +1,5 @@
+class DB(object):
+    username = 'sec'
+    password = '******'
+    url = '127.0.0.1'
+    db = 'sec'
