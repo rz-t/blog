@@ -8,6 +8,17 @@ class="active"
     <!-- <link rel="stylesheet" href="{{ url_for('static', filename='css/markdown.css') }}"> -->
         <link rel="stylesheet" href="{{ url_for('static', filename='markdown/css/style.css') }}" />
         <link rel="stylesheet" href="{{ url_for('static', filename='markdown/css/editormd.css') }}" />
+	<style>
+	.site-item{
+		margin-top: 3px;
+	}
+	.site-dir{
+		margin-left: 15px;
+	}
+	.layui-layer-dir{
+		top: auto;
+	}
+	</style>
 {% endblock %}
 
 {% block content %}
@@ -34,6 +45,8 @@ class="active"
         <div id="editormd-view" class="layui-col-md10 layui-col-md-offset1" style="min-height:600px; padding:20px; margin-top:10px; border:groove;">
             <textarea id="append-view" style="display:none">{{ content }}</textarea>
         </div>
+
+	<div class="toc"> <!-- markdown title --></div>
     </div>
 </div>
 {% endblock %}
@@ -47,6 +60,7 @@ class="active"
 <script src="{{ url_for('static', filename='markdown/lib/flowchart.min.js') }}"></script>
 <script src="{{ url_for('static', filename='markdown/lib/jquery.flowchart.min.js') }}"></script>
 <script src="{{ url_for('static', filename='markdown/js/editormd.js') }}"></script>
+<script src="{{ url_for('static', filename='markdown/js/toc.js') }}"></script>
 <script>
     $(function(){
         editormdView = editormd.markdownToHTML("editormd-view", {
@@ -56,6 +70,36 @@ class="active"
                     flowChart       : true,  // 默认不解析
                     sequenceDiagram : true,  // 默认不解析
                 });
+	$('.toc').toc({
+		listType: 'ul',
+		minimumHeaders: 1,
+		classes: {
+			list: 'site-dir layui-layer-wrap',
+			item: 'site-item'
+		}
+	});
+	
+	layer.open({
+		id: 'layertitle',
+		type: 1,
+		title: "目录",
+		content: $('.toc'),
+		skin: 'layui-layer-dir layui-hide-xs layui-hide-sm layui-show-md-block layui-show-lg-block',
+		shade: 0,
+		area: '270px',
+		maxHeight: $(window).height() - 300,
+		offset: 'r',
+		resize: true,
+		closeBtn: 0,
+		success: function(layero, index){
+		  layer.style(index, {
+		    marginLeft: -15,
+		    top: '105px',
+		    paddingLeft: '10px',
+		    paddingBottom: '15px'
+		  });
+		}
+	});
     });
     function edit_note(){
         location.href="{{ url_for('web.note_editor', _id=node_model.id) }}";
