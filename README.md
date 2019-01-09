@@ -1,2 +1,2 @@
-[blog](http://www.rz6.tech)
+[blog](https://www.rz6.tech)
 

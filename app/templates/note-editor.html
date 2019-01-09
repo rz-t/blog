@@ -20,7 +20,10 @@
         $.post("{{ url_for('web.note_edit_content', _id=node_model.id) }}", {
             content: $("#content-editormd textarea").val()
         }, function(resp){
-            resp = JSON.parse(resp);
+	    try{
+		    resp = JSON.parse(resp);
+            }catch(err){
+	    }
             if(resp.flag != 'success'){
                 alert(JSON.stringify(resp));
             }

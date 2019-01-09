@@ -1,2 +1,2 @@
 class Wooyun(object):
-    uri = "http://www.rz6.tech/wooyun"
+    uri = "https://www.rz6.tech/wooyun"

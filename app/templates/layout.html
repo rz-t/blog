@@ -66,7 +66,7 @@
 					</a>
 				</li>
 				<li {% block active_blog %}{% endblock %}>
-					<a href='http://blog.rz6.tech'>
+					<a href='https://blog.rz6.tech'>
 						<span>Blog</span>
 					</a>
 				</li>
@@ -154,7 +154,11 @@
 
 			function logout(){
 				$.get("{{ url_for('web.logout') }}", function(resp){
-					var r = JSON.parse(resp);
+		                        try{
+		                            var r = JSON.parse(resp);
+		                        }catch(err){
+		                            var r = resp;
+		                        }
 					if(r.flag != 'success'){
 						layer.msg(r.data, {
 							icon:5
@@ -189,8 +193,12 @@
 
 					form.on('submit(login_form)', function(data){
 						$.post(data.elem.action, $(data.elem).serialize(), function(resp){
-							window.resp = resp;
-							resp = JSON.parse(resp);
+							try{
+							    window.resp = JSON.parse(resp);
+                                                            resp = window.resp;
+							}catch(err){
+							    window.resp = resp;
+							}
 							if(resp.flag == 'success'){ //登陆成功
 								location.reload();
 							}else{

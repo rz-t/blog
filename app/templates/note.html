@@ -68,7 +68,11 @@ class="active"
                 document.onkeydown = ()=>{
                     if(event.keyCode == 27){
                         $.post("{{ url_for('web.note_cancel_cut') }}", {}, (resp)=>{
-                            r = JSON.parse(resp);
+                            try{
+				r = JSON.parse(resp);
+			    }catch(err){
+			        r = resp;
+			    }
                             if (r.flag != 'success'){
                                 layer.msg(r.data, {icon: 5}); 
                             }else{
@@ -86,7 +90,11 @@ class="active"
         function cut_note(url){
             //剪切粘贴
             $.post(url, {}, (resp)=>{
-                r = JSON.parse(resp);
+		try{
+		    r = JSON.parse(resp);
+		}catch(err){
+		    r = resp;
+		}
                 if (r.flag != 'success'){
                     layer.msg(r.data, {icon: 5}); 
                 }else{
@@ -97,7 +105,11 @@ class="active"
         function delete_note(url){
             layer.confirm('确定删除？', {icon:3, title:'提示'}, (index)=>{
                 $.post(url, {}, (resp)=>{
-                    r = JSON.parse(resp);
+		    try{
+		        r = JSON.parse(resp);
+		    }catch(err){
+		        r = resp;
+		    }
                     if (r.flag != 'success'){
                         layer.msg(r.data, {icon: 5}); 
                     }else{
@@ -114,7 +126,11 @@ class="active"
                     title: $("#title").val(),
                     flag: flag
                 }, (resp)=>{
-                    r = JSON.parse(resp);
+		    try{
+		        r = JSON.parse(resp);
+		    }catch(err){
+		        r = resp;
+		    }
                     if (r.flag != 'success'){
                         layer.tips(r.data, '#add_form');
                     }else{
@@ -155,7 +171,11 @@ class="active"
                 area:'350px',
                 yes: ()=>{
                     $.post("{{ url_for('web.note_edit_title') }}" + _id, $("#edit_form").serialize(), (resp)=>{
-                        r = JSON.parse(resp);
+		        try{
+		            r = JSON.parse(resp);
+		        }catch(err){
+		            r = resp;
+		        }
                         if (r.flag != 'success'){
                             layer.tips(r.data, '#edit_form');
                             return false;
